@@ -14,43 +14,51 @@
   </div>
 </form>
 
-
 <% if @voters %>
   <table class="table">
     <thead>
       <tr>
-        <th>#</th>
         <th>First Name</th>
         <th>Last Name</th>
         <th>DOB (Age)</th>
         <th>Status</th>
         <th>Party</th>
         <th>Address</th>
-        <th>City</th>
         <th>Precinct</th>
-        <th>&nbsp;</th>
+        <th>Voting Record</th>
       </tr>
     </thead>
     <tbody>
       <% @voters.each do |voter| %>
       <tr>
-        <th scope="row">
-          <a href="/voters/<%= voter[:SOS_VOTERID] %>"><%= voter[:SOS_VOTERID] %></a>
-        </th>
-        <td><%= voter[:FIRST_NAME] %></td>
-        <td><%= voter[:LAST_NAME] %></td>
+        <td>
+          <div><%= voter[:FIRST_NAME] %></div>
+          <div class="small"><a href="/voters/<%= voter[:SOS_VOTERID] %>"><%= voter[:SOS_VOTERID] %></a></div>
+        </td>
+        <td>
+          <div><%= voter[:LAST_NAME] %></div>
+          <div>&nbsp;</div>
+        </td>
         <td>
           <%= voter[:DATE_OF_BIRTH] %>
           (<%= age(voter[:DATE_OF_BIRTH]) %>)
         </td>
-        <td><%= voter[:VOTER_STATUS] %></td>
+        <td data-toggle="tooltip" data-placement="top" title="<%= voter[:VOTER_STATUS] %>"><%= voter[:VOTER_STATUS].to_s[0, 1] %></td>
         <td class="party party--<%= voter[:PARTY_AFFILIATION] %>">
           <%= voter[:PARTY_AFFILIATION] %>
         </td>
         <td><%= voter[:RESIDENTIAL_ADDRESS1] %></td>
-        <td><%= voter[:CITY] %></td>
-        <td><%= voter[:PRECINCT_NAME] %></td>
-        <td><%= voter[:PRECINCT_CODE] %></td>
+        <td>
+          <div><%= voter[:PRECINCT_NAME].to_s.gsub("PRECINCT ", "") %></div>
+          <div class="small text-muted"><%= voter[:PRECINCT_CODE] %></div>
+        </td>
+        <td class="small">
+          <% voter.keys.grep(/general/i).sort_by {|k| Date.strptime(k.to_s.split("-").last, "%m/%d/%Y") rescue nil }.last(8).each do |f|  %>
+            <span class="cursor-pointer" data-toggle="tooltip" data-placement="top" title="<%= f %>">
+              <%= voter[f] ? "◉" : "○" %>
+            </span>
+          <% end %>
+        </td>
       </tr>
       <% end %>
     </tbody>
