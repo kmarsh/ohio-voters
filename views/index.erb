@@ -1,86 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <style>
-      td.party--R {
-        color: #c0392b;
-      }
-      td.party--D {
-        color: #3498db;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-
-      <h2 class="my-4">
-        Lucas County Voter Search
-      </h2>
-
-      <form class="form mb-4">
-        <div class="row align-items-end">
-          <div class="col">
-            <label for="last_name" class="form-label">Last Name</label>
-            <input type="text" name="last_name" id="last_name" class="form-control" value="<%= params[:last_name] %>" />
-          </div>
-          <div class="col">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" name="address" id="address" class="form-control" value="<%= params[:address] %>" />
-          </div>
-          <div class="col">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </div>
-        </div>
-      </form>
-
-      <% if @voters %>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>DOB (Age)</th>
-            <th>Status</th>
-            <th>Party</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Precinct</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @voters.each do |voter| %>
-          <tr>
-            <th scope="row"><%= voter[:SOS_VOTERID] %></th>
-            <td><%= voter[:FIRST_NAME] %></td>
-            <td><%= voter[:LAST_NAME] %></td>
-            <td>
-              <%= voter[:DATE_OF_BIRTH] %>
-              (<%= age(voter[:DATE_OF_BIRTH]) %>)
-            </td>
-            <td><%= voter[:VOTER_STATUS] %></td>
-            <td class="party party--<%= voter[:PARTY_AFFILIATION] %>">
-              <%= voter[:PARTY_AFFILIATION] %>
-            </td>
-            <td><%= voter[:RESIDENTIAL_ADDRESS1] %></td>
-            <td><%= voter[:CITY] %></td>
-            <td><%= voter[:PRECINCT_NAME] %></td>
-            <td><%= voter[:PRECINCT_CODE] %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <% end %>
-
+<form action="/" method="GET" class="form mb-4">
+  <div class="row align-items-end">
+    <div class="col">
+      <label for="last_name" class="form-label">Last Name</label>
+      <input type="text" name="last_name" id="last_name" class="form-control" value="<%= params[:last_name] %>" />
     </div>
+    <div class="col">
+      <label for="address" class="form-label">Address</label>
+      <input type="text" name="address" id="address" class="form-control" value="<%= params[:address] %>" />
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </div>
+</form>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-  </body>
-</html>
+
+<% if @voters %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>DOB (Age)</th>
+        <th>Status</th>
+        <th>Party</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Precinct</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @voters.each do |voter| %>
+      <tr>
+        <th scope="row">
+          <a href="/voters/<%= voter[:SOS_VOTERID] %>"><%= voter[:SOS_VOTERID] %></a>
+        </th>
+        <td><%= voter[:FIRST_NAME] %></td>
+        <td><%= voter[:LAST_NAME] %></td>
+        <td>
+          <%= voter[:DATE_OF_BIRTH] %>
+          (<%= age(voter[:DATE_OF_BIRTH]) %>)
+        </td>
+        <td><%= voter[:VOTER_STATUS] %></td>
+        <td class="party party--<%= voter[:PARTY_AFFILIATION] %>">
+          <%= voter[:PARTY_AFFILIATION] %>
+        </td>
+        <td><%= voter[:RESIDENTIAL_ADDRESS1] %></td>
+        <td><%= voter[:CITY] %></td>
+        <td><%= voter[:PRECINCT_NAME] %></td>
+        <td><%= voter[:PRECINCT_CODE] %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

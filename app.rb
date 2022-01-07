@@ -25,5 +25,12 @@ get "/" do
                     .order(:residential_address1)
   end
 
-  erb :'index'
+  erb :'index', layout: true
+end
+
+get '/voters/:id' do
+  @voter = VOTERS.where(SOS_VOTERID: params[:id])
+                .first
+
+  erb :'show', layout: true
 end
